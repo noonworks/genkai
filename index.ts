@@ -76,7 +76,7 @@ function makeZalgo(yomigana: string, bunshou: string): string {
       prev = CharType.DIACRITICAL;
     } else if (yChar in ModifierLetterMap) {
       // modifier letters
-      if (bChar !== ' ') {
+      if (bChar !== ' ' || prev === CharType.DIACRITICAL) {
         result += bChar;
       }
       result += ModifierLetterMap[yChar];
