@@ -67,12 +67,14 @@ function makeZalgo(yomigana: string, bunshou: string): string {
   if (yomigana.length === 0) {
     return bunshou;
   }
+  const useDiacritical = chkRubyChar ? chkRubyChar.checked : true;
+  const useModifier = chkOtherChar ? chkOtherChar.checked : true;
   let result = '';
   let prev = CharType.EMPTY;
   for (let i = 0; i < yomigana.length; i++) {
     const yChar = yomigana.substring(i, i + 1);
     const bChar = bunshou.substring(i, i + 1);
-    if (yChar in DiacriticalMarkMap) {
+    if (useDiacritical && (yChar in DiacriticalMarkMap)) {
       // diacritical marks
       if (bChar === ' ' && (prev === CharType.INVALID || prev === CharType.DIACRITICAL)) {
         result += '  ';
@@ -81,18 +83,20 @@ function makeZalgo(yomigana: string, bunshou: string): string {
       }
       (DiacriticalMarkMap[yChar] as string[]).forEach((c) => result += c);
       prev = CharType.DIACRITICAL;
-    } else if (yChar in ModifierLetterMap) {
+      continue;
+    }
+    if (useModifier && (yChar in ModifierLetterMap)) {
       // modifier letters
       if (bChar !== ' ' || prev === CharType.DIACRITICAL) {
         result += bChar;
       }
       result += ModifierLetterMap[yChar];
       prev = CharType.MODIFIER;
-    } else {
-      // invalid yomigana
-      result += bChar;
-      prev = CharType.INVALID;
+      continue;
     }
+    // invalid yomigana
+    result += bChar;
+    prev = CharType.INVALID;
   }
   return result;
 }
@@ -114,11 +118,15 @@ function doOnChange() {
 let yomiganaInput: HTMLInputElement | null;
 let bunshouInput: HTMLInputElement | null;
 let resultInput: HTMLInputElement | null;
+let chkRubyChar: HTMLInputElement | null;
+let chkOtherChar: HTMLInputElement | null;
 
 function initialize() {
   yomiganaInput = document.querySelector('#yomigana');
   bunshouInput = document.querySelector('#bunshou');
   resultInput = document.querySelector('#result');
+  chkRubyChar = document.querySelector('#rubychar');
+  chkOtherChar = document.querySelector('#otherchar');
   if (yomiganaInput) {
     yomiganaInput.addEventListener('keyup', debounceOnChange);
     yomiganaInput.addEventListener('blur', debounceOnChange);
@@ -126,6 +134,12 @@ function initialize() {
   if (bunshouInput) {
     bunshouInput.addEventListener('keyup', debounceOnChange);
     bunshouInput.addEventListener('blur', debounceOnChange);
+  }
+  if (chkRubyChar) {
+    chkRubyChar.addEventListener('change', debounceOnChange);
+  }
+  if (chkOtherChar) {
+    chkOtherChar.addEventListener('change', debounceOnChange);
   }
   const charlist: HTMLSpanElement | null = document.querySelector('#charlist');
   const charlist2: HTMLSpanElement | null = document.querySelector('#charlist2');
