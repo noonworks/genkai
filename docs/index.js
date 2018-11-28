@@ -7,29 +7,29 @@ var CharMap = {
 'aeioucdhmrtvx'.split('').map(function (v, i) {
     CharMap[v] = [String.fromCharCode(0x0363 + i)];
 });
-function addSpaces(yomigana, bunshou) {
-    if (bunshou.length >= yomigana.length) {
-        return bunshou;
+function alignLength(yomigana, bunshou) {
+    if (yomigana.length === 0 || yomigana.length === bunshou.length) {
+        return { bunshou: bunshou, yomigana: yomigana };
     }
-    var result = bunshou;
-    var fusoku = yomigana.length - bunshou.length;
-    var after = Math.floor(fusoku / 2);
-    var pre = fusoku - after;
-    for (var i = 0; i < after || i < pre; i++) {
-        if (i < after) {
-            result = result + ' ';
-        }
-        if (i < pre) {
-            result = ' ' + result;
-        }
+    var diff = yomigana.length - bunshou.length;
+    var padS = Math.floor(Math.abs(diff) / 2);
+    var spaceS = ' '.repeat(padS);
+    var spaceL = ' '.repeat(Math.abs(diff) - padS);
+    if (diff > 0) {
+        bunshou = spaceS + bunshou + spaceL;
     }
-    return result;
+    else {
+        yomigana = spaceS + yomigana + spaceL;
+    }
+    return { bunshou: bunshou, yomigana: yomigana };
 }
 function makeZalgo(yomigana, bunshou) {
+    var r = alignLength(yomigana, bunshou);
+    bunshou = r.bunshou;
+    yomigana = r.yomigana;
     if (yomigana.length === 0) {
         return bunshou;
     }
-    bunshou = addSpaces(yomigana, bunshou);
     var result = '';
     for (var i = 0; i < yomigana.length; i++) {
         var yChar = yomigana.substring(i, i + 1);

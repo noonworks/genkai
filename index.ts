@@ -1,39 +1,45 @@
-const CharMap = {
+const DiacriticalMarkMap = {
   '-': [String.fromCharCode(0x0304)],
   '.': [String.fromCharCode(0x0307)],
   '?': [String.fromCharCode(0x0307), String.fromCharCode(0x0309)],
   '~': [String.fromCharCode(0x0303)],
 };
 'aeioucdhmrtvx'.split('').map((v, i) => {
-  CharMap[v] = [String.fromCharCode(0x0363 + i)];
+  DiacriticalMarkMap[v] = [String.fromCharCode(0x0363 + i)];
 });
 
-function addSpaces(yomigana: string, bunshou: string): string {
-  if (bunshou.length >= yomigana.length) {
-    return bunshou;
+function alignLength(yomigana: string, bunshou: string): {
+  yomigana: string,
+  bunshou: string,
+} {
+  if (yomigana.length === 0 || yomigana.length === bunshou.length) {
+    return { bunshou, yomigana };
   }
-  let result = bunshou;
-  const fusoku = yomigana.length - bunshou.length;
-  const after = Math.floor(fusoku / 2);
-  const pre = fusoku - after;
-  for (let i = 0; i < after || i < pre; i++) {
-    if (i < after) { result = result + ' '; }
-    if (i < pre) { result = ' ' + result; }
+  const diff = yomigana.length - bunshou.length;
+  const padS = Math.floor(Math.abs(diff) / 2);
+  const spaceS = ' '.repeat(padS);
+  const spaceL = ' '.repeat(Math.abs(diff) - padS);
+  if (diff > 0) {
+    bunshou = spaceS + bunshou + spaceL;
+  } else {
+    yomigana = spaceS + yomigana + spaceL;
   }
-  return result;
+  return { bunshou, yomigana };
 }
 
 function makeZalgo(yomigana: string, bunshou: string): string {
+  const r = alignLength(yomigana, bunshou);
+  bunshou = r.bunshou;
+  yomigana = r.yomigana;
   if (yomigana.length === 0) {
     return bunshou;
   }
-  bunshou = addSpaces(yomigana, bunshou);
   let result = '';
   for (let i = 0; i < yomigana.length; i++) {
     const yChar = yomigana.substring(i, i + 1);
     const bChar = bunshou.substring(i, i + 1);
-    if (yChar in CharMap) {
-      // valid yomigana
+    if (yChar in DiacriticalMarkMap) {
+      // diacritical marks
       if (bChar === ' ') {
         result += '  ';
       } else {
@@ -80,7 +86,7 @@ function initialize() {
   }
   const charlist: HTMLSpanElement | null = document.querySelector('#charlist');
   if (charlist) {
-    charlist.innerText = Object.getOwnPropertyNames(CharMap).join(' ');
+    charlist.innerText = Object.getOwnPropertyNames(DiacriticalMarkMap).join(' ');
   }
 }
 
