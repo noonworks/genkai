@@ -7,6 +7,24 @@ const DiacriticalMarkMap = {
 'aeioucdhmrtvx'.split('').map((v, i) => {
   DiacriticalMarkMap[v] = [String.fromCharCode(0x0363 + i)];
 });
+const ModifierLetterMap = {
+  '!': String.fromCharCode(0xA71D),
+};
+'h jr   wy'.split('').map((c, i) => {
+  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x02B0 + i); }
+});
+'sx'.split('').map((c, i) => {
+  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x02E2 + i); }
+});
+'A B DE GHIJKLMN O PRTUW'.split('').map((c, i) => {
+  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x1D2C + i); }
+});
+'a   bde   g km o   ptu  v'.split('').map((c, i) => {
+  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x1D43 + i); }
+});
+'c   f g   I         N       U  z'.split('').map((c, i) => {
+  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x1D9C + i); }
+});
 
 function alignLength(yomigana: string, bunshou: string): {
   yomigana: string,
@@ -27,6 +45,13 @@ function alignLength(yomigana: string, bunshou: string): {
   return { bunshou, yomigana };
 }
 
+enum CharType {
+  EMPTY,
+  DIACRITICAL,
+  MODIFIER,
+  INVALID,
+}
+
 function makeZalgo(yomigana: string, bunshou: string): string {
   const r = alignLength(yomigana, bunshou);
   bunshou = r.bunshou;
@@ -35,20 +60,30 @@ function makeZalgo(yomigana: string, bunshou: string): string {
     return bunshou;
   }
   let result = '';
+  let prev = CharType.EMPTY;
   for (let i = 0; i < yomigana.length; i++) {
     const yChar = yomigana.substring(i, i + 1);
     const bChar = bunshou.substring(i, i + 1);
     if (yChar in DiacriticalMarkMap) {
       // diacritical marks
-      if (bChar === ' ') {
+      if (bChar === ' ' && (prev === CharType.INVALID || prev === CharType.DIACRITICAL)) {
         result += '  ';
       } else {
         result += bChar;
       }
-      (CharMap[yChar] as string[]).forEach((c) => result += c);
+      (DiacriticalMarkMap[yChar] as string[]).forEach((c) => result += c);
+      prev = CharType.DIACRITICAL;
+    } else if (yChar in ModifierLetterMap) {
+      // modifier letters
+      if (bChar !== ' ') {
+        result += bChar;
+      }
+      result += ModifierLetterMap[yChar];
+      prev = CharType.MODIFIER;
     } else {
       // invalid yomigana
       result += bChar;
+      prev = CharType.INVALID;
     }
   }
   return result;

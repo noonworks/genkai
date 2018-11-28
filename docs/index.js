@@ -1,11 +1,39 @@
-var CharMap = {
+var DiacriticalMarkMap = {
     '-': [String.fromCharCode(0x0304)],
     '.': [String.fromCharCode(0x0307)],
     '?': [String.fromCharCode(0x0307), String.fromCharCode(0x0309)],
     '~': [String.fromCharCode(0x0303)],
 };
 'aeioucdhmrtvx'.split('').map(function (v, i) {
-    CharMap[v] = [String.fromCharCode(0x0363 + i)];
+    DiacriticalMarkMap[v] = [String.fromCharCode(0x0363 + i)];
+});
+var ModifierLetterMap = {
+    '!': String.fromCharCode(0xA71D),
+};
+'h jr   wy'.split('').map(function (c, i) {
+    if (c !== ' ') {
+        ModifierLetterMap[c] = String.fromCharCode(0x02B0 + i);
+    }
+});
+'sx'.split('').map(function (c, i) {
+    if (c !== ' ') {
+        ModifierLetterMap[c] = String.fromCharCode(0x02E2 + i);
+    }
+});
+'A B DE GHIJKLMN O PRTUW'.split('').map(function (c, i) {
+    if (c !== ' ') {
+        ModifierLetterMap[c] = String.fromCharCode(0x1D2C + i);
+    }
+});
+'a   bde   g km o   ptu  v'.split('').map(function (c, i) {
+    if (c !== ' ') {
+        ModifierLetterMap[c] = String.fromCharCode(0x1D43 + i);
+    }
+});
+'c   f g   I         N       U  z'.split('').map(function (c, i) {
+    if (c !== ' ') {
+        ModifierLetterMap[c] = String.fromCharCode(0x1D9C + i);
+    }
 });
 function alignLength(yomigana, bunshou) {
     if (yomigana.length === 0 || yomigana.length === bunshou.length) {
@@ -23,6 +51,13 @@ function alignLength(yomigana, bunshou) {
     }
     return { bunshou: bunshou, yomigana: yomigana };
 }
+var CharType;
+(function (CharType) {
+    CharType[CharType["EMPTY"] = 0] = "EMPTY";
+    CharType[CharType["DIACRITICAL"] = 1] = "DIACRITICAL";
+    CharType[CharType["MODIFIER"] = 2] = "MODIFIER";
+    CharType[CharType["INVALID"] = 3] = "INVALID";
+})(CharType || (CharType = {}));
 function makeZalgo(yomigana, bunshou) {
     var r = alignLength(yomigana, bunshou);
     bunshou = r.bunshou;
@@ -31,22 +66,33 @@ function makeZalgo(yomigana, bunshou) {
         return bunshou;
     }
     var result = '';
+    var prev = CharType.EMPTY;
     for (var i = 0; i < yomigana.length; i++) {
         var yChar = yomigana.substring(i, i + 1);
         var bChar = bunshou.substring(i, i + 1);
-        if (yChar in CharMap) {
-            // valid yomigana
-            if (bChar === ' ') {
+        if (yChar in DiacriticalMarkMap) {
+            // diacritical marks
+            if (bChar === ' ' && (prev === CharType.INVALID || prev === CharType.DIACRITICAL)) {
                 result += '  ';
             }
             else {
                 result += bChar;
             }
-            CharMap[yChar].forEach(function (c) { return result += c; });
+            DiacriticalMarkMap[yChar].forEach(function (c) { return result += c; });
+            prev = CharType.DIACRITICAL;
+        }
+        else if (yChar in ModifierLetterMap) {
+            // modifier letters
+            if (bChar !== ' ') {
+                result += bChar;
+            }
+            result += ModifierLetterMap[yChar];
+            prev = CharType.MODIFIER;
         }
         else {
             // invalid yomigana
             result += bChar;
+            prev = CharType.INVALID;
         }
     }
     return result;
@@ -82,7 +128,7 @@ function initialize() {
     }
     var charlist = document.querySelector('#charlist');
     if (charlist) {
-        charlist.innerText = Object.getOwnPropertyNames(CharMap).join(' ');
+        charlist.innerText = Object.getOwnPropertyNames(DiacriticalMarkMap).join(' ');
     }
 }
 document.addEventListener('DOMContentLoaded', initialize);
