@@ -13,6 +13,8 @@ var ModifierLetterMap = {
     '1': String.fromCharCode(0x00B9),
     '2': String.fromCharCode(0x00B2),
     '3': String.fromCharCode(0x00B3),
+    'V': String.fromCharCode(0x2C7D),
+    'i': String.fromCharCode(0x2071),
     'n': String.fromCharCode(0x207F),
 };
 'h jr   wy'.split('').map(function (c, i) {
