@@ -80,5 +80,9 @@ function initialize() {
         bunshouInput.addEventListener('keyup', debounceOnChange);
         bunshouInput.addEventListener('blur', debounceOnChange);
     }
+    var charlist = document.querySelector('#charlist');
+    if (charlist) {
+        charlist.innerText = Object.getOwnPropertyNames(CharMap).join(' ');
+    }
 }
 document.addEventListener('DOMContentLoaded', initialize);

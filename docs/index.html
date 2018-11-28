@@ -24,6 +24,15 @@
         p {
             text-align: center;
         }
+        span.note {
+            margin: 0;
+            font-size: 0.8em;
+        }
+        span.note code {
+            padding: 2px;
+            margin: 0 4px;
+            background-color:lightgray;
+        }
     </style>
 </head>
 
@@ -31,6 +40,7 @@
     <h1>限界すぎて声が小さくなっちゃうやつ</h1>
     <form>
         <label for="yomigana">読み仮名：</label>
+        <span class="note">※使用可能文字<code id="charlist"></code></span>
         <input type="text" name="yomigana" id="yomigana" />
         <label for="bunshou">文章（あれば）：半角英数のみ</label>
         <input type="text" name="bunshou" id="bunshou" />

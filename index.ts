@@ -78,6 +78,10 @@ function initialize() {
     bunshouInput.addEventListener('keyup', debounceOnChange);
     bunshouInput.addEventListener('blur', debounceOnChange);
   }
+  const charlist: HTMLSpanElement | null = document.querySelector('#charlist');
+  if (charlist) {
+    charlist.innerText = Object.getOwnPropertyNames(CharMap).join(' ');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initialize);
