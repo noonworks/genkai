@@ -120,8 +120,12 @@ function initialize() {
     bunshouInput.addEventListener('blur', debounceOnChange);
   }
   const charlist: HTMLSpanElement | null = document.querySelector('#charlist');
+  const charlist2: HTMLSpanElement | null = document.querySelector('#charlist2');
   if (charlist) {
-    charlist.innerText = Object.getOwnPropertyNames(DiacriticalMarkMap).join(' ');
+    charlist.innerText = Object.getOwnPropertyNames(DiacriticalMarkMap).sort().join(' ');
+  }
+  if (charlist2) {
+    charlist2.innerText = Object.getOwnPropertyNames(ModifierLetterMap).sort().join(' ');
   }
 }
 

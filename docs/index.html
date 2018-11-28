@@ -14,21 +14,25 @@
         input[type=text] {
             font-size: 1.25rem;
             width: 100%;
-            margin-bottom: 0.5em;
             box-sizing: border-box;
             padding: 10px;
         }
         input[type=text]#result {
             padding: 1em 10px;
         }
+        label {
+            margin-top: 0.75em;
+            display: inline-block;
+        }
         p {
             text-align: center;
         }
-        span.note {
+        p.note {
             margin: 0;
             font-size: 0.8em;
+            text-align: left;
         }
-        span.note code {
+        .note code {
             padding: 2px;
             margin: 0 4px;
             background-color:lightgray;
@@ -39,10 +43,11 @@
 <body>
     <h1>限界すぎて声が小さくなっちゃうやつ</h1>
     <form>
-        <label for="yomigana">読み仮名：</label>
-        <span class="note">※使用可能文字<code id="charlist"></code></span>
+        <label for="yomigana">小さい文字：</label>
         <input type="text" name="yomigana" id="yomigana" />
-        <label for="bunshou">文章（あれば）：半角英数のみ</label>
+        <p class="note">ルビ表示可能文字<code id="charlist"></code></p>
+        <p class="note">その他仕様可能文字<code id="charlist2"></code></p>
+        <label for="bunshou">下に表示する文字（あれば）：半角英数のみ</label>
         <input type="text" name="bunshou" id="bunshou" />
         <p>↓</p>
         <input type="text" name="result" id="result" />
