@@ -9,13 +9,17 @@ const DiacriticalMarkMap = {
 });
 const ModifierLetterMap = {
   '!': String.fromCharCode(0xA71D),
+  '0': String.fromCharCode(0x2070),
+  '1': String.fromCharCode(0x00B9),
+  '2': String.fromCharCode(0x00B2),
+  '3': String.fromCharCode(0x00B3),
   'n': String.fromCharCode(0x207F),
 };
 'h jr   wy'.split('').map((c, i) => {
   if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x02B0 + i); }
 });
-'sx'.split('').map((c, i) => {
-  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x02E2 + i); }
+'lsx'.split('').map((c, i) => {
+  if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x02E1 + i); }
 });
 'A B DE GHIJKLMN O PRTUW'.split('').map((c, i) => {
   if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x1D2C + i); }
@@ -26,6 +30,9 @@ const ModifierLetterMap = {
 'c   f g   I         N       U  z'.split('').map((c, i) => {
   if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x1D9C + i); }
 });
+for (let i = 4; i <= 9; i++) {
+  ModifierLetterMap['' + i] = String.fromCharCode(0x2070 + i);
+}
 
 function alignLength(yomigana: string, bunshou: string): {
   yomigana: string,

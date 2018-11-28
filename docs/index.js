@@ -9,6 +9,10 @@ var DiacriticalMarkMap = {
 });
 var ModifierLetterMap = {
     '!': String.fromCharCode(0xA71D),
+    '0': String.fromCharCode(0x2070),
+    '1': String.fromCharCode(0x00B9),
+    '2': String.fromCharCode(0x00B2),
+    '3': String.fromCharCode(0x00B3),
     'n': String.fromCharCode(0x207F),
 };
 'h jr   wy'.split('').map(function (c, i) {
@@ -16,9 +20,9 @@ var ModifierLetterMap = {
         ModifierLetterMap[c] = String.fromCharCode(0x02B0 + i);
     }
 });
-'sx'.split('').map(function (c, i) {
+'lsx'.split('').map(function (c, i) {
     if (c !== ' ') {
-        ModifierLetterMap[c] = String.fromCharCode(0x02E2 + i);
+        ModifierLetterMap[c] = String.fromCharCode(0x02E1 + i);
     }
 });
 'A B DE GHIJKLMN O PRTUW'.split('').map(function (c, i) {
@@ -36,6 +40,9 @@ var ModifierLetterMap = {
         ModifierLetterMap[c] = String.fromCharCode(0x1D9C + i);
     }
 });
+for (var i = 4; i <= 9; i++) {
+    ModifierLetterMap['' + i] = String.fromCharCode(0x2070 + i);
+}
 function alignLength(yomigana, bunshou) {
     if (yomigana.length === 0 || yomigana.length === bunshou.length) {
         return { bunshou: bunshou, yomigana: yomigana };
