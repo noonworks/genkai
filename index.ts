@@ -9,6 +9,7 @@ const DiacriticalMarkMap = {
 });
 const ModifierLetterMap = {
   '!': String.fromCharCode(0xA71D),
+  'n': String.fromCharCode(0x207F),
 };
 'h jr   wy'.split('').map((c, i) => {
   if (c !== ' ') { ModifierLetterMap[c] = String.fromCharCode(0x02B0 + i); }

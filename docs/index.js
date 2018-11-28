@@ -9,6 +9,7 @@ var DiacriticalMarkMap = {
 });
 var ModifierLetterMap = {
     '!': String.fromCharCode(0xA71D),
+    'n': String.fromCharCode(0x207F),
 };
 'h jr   wy'.split('').map(function (c, i) {
     if (c !== ' ') {
