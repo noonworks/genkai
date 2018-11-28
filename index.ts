@@ -1,4 +1,5 @@
 const CharMap = {
+  '-': [String.fromCharCode(0x0304)],
   '.': [String.fromCharCode(0x0307)],
   '?': [String.fromCharCode(0x0307), String.fromCharCode(0x0309)],
   '~': [String.fromCharCode(0x0303)],
@@ -31,11 +32,6 @@ function makeZalgo(yomigana: string, bunshou: string): string {
   for (let i = 0; i < yomigana.length; i++) {
     const yChar = yomigana.substring(i, i + 1);
     const bChar = bunshou.substring(i, i + 1);
-    if (yChar === ' ') {
-      // yomigana is ' '
-      result += bChar;
-      continue;
-    }
     if (yChar in CharMap) {
       // valid yomigana
       if (bChar === ' ') {
